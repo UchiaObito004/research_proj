@@ -320,7 +320,7 @@ If you use this work or codebase in your academic research, please cite:
 ```bibtex
 @inproceedings{kumar2026fruit,
   title={Deep Learning-Based Automated Fruit Freshness Classification: A Comparative Study of MobileNetV2 and EfficientNetB0},
-  author={Kumar, Ayush and Verma, Bhushan and Jain, Jayant and Sehgal, Mitu},
+  author={Ayush kumar,Bhushan verma,Jayant jain,Dr. Mitu sehgal},
   booktitle={Department of Computer Science & Engineering, Panipat Institute of Engineering and Technology},
   year={2026}
 }
