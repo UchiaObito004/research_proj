@@ -31,3 +31,4 @@ best_model*.h5
 *.log
 .vercel
 *backup*.txt
+*.pdf

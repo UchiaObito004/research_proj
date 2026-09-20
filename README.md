@@ -302,7 +302,6 @@ research_proj/
 │   ├── service.yaml               # LoadBalancer service & Ingress reverse proxy
 │   ├── hpa.yaml                   # Horizontal Pod Autoscaler (3 to 15 pods)
 ├── research_paper.html         # Camera-ready IEEE 2-column research paper
-├── research_paper.pdf          # Pre-compiled 6-page IEEE publication PDF
 ├── fig_workflow.png            # System workflow diagram
 ├── fig_architecture.png        # CNN Architecture diagram
 ├── fig_curves.png              # Training & validation curves
@@ -320,7 +319,6 @@ research_proj/
 
 The complete research manuscript is available directly in this repository:
 - 📖 **Interactive IEEE Paper (HTML)**: [`research_paper.html`](research_paper.html)
-- 📥 **Camera-Ready Publication (PDF)**: [`research_paper.pdf`](research_paper.pdf) (6 Pages, IEEE 2-Column Standard)
 
 If you use this work or codebase in your academic research, please cite:
 
