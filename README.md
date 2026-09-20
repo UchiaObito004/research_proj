@@ -1,13 +1,17 @@
 # 🍎 Automated Fruit Freshness Detection System
 ### *A Comparative Deep Learning Study (MobileNetV2 vs. EfficientNetB0) & Production Deployment*
 
+[![Vercel Live](https://img.shields.io/badge/Vercel-Live_Deployment-black.svg?logo=vercel)](https://cllgproj.vercel.app)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15-orange.svg)](https://tensorflow.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110-teal.svg)](https://fastapi.tiangolo.com/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.32-red.svg)](https://streamlit.io/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Autoscaling-326ce5.svg?logo=kubernetes&logoColor=white)](k8s/)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ed.svg?logo=docker&logoColor=white)](Dockerfile)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-An end-to-end, production-ready computer vision solution for automated post-harvest fruit quality assessment. This project trains and rigorously benchmarks two state-of-the-art transfer learning architectures—**MobileNetV2** and **EfficientNetB0**—on a multi-fruit dataset of 13,599 images. The champion model achieves **97.96% test accuracy** and a **0.9985 ROC-AUC score**, packaged into a high-performance **FastAPI** REST backend and an intuitive **Streamlit** web dashboard.
+> 🚀 **Live Production Web Application**: [https://cllgproj.vercel.app](https://cllgproj.vercel.app)
+
+An end-to-end, production-ready computer vision solution for automated post-harvest fruit quality assessment. This project trains and rigorously benchmarks two state-of-the-art transfer learning architectures—**MobileNetV2** and **EfficientNetB0**—on a multi-fruit dataset of 13,599 images. The champion model achieves **97.96% test accuracy** and a **0.9985 ROC-AUC score**, packaged into a high-performance **FastAPI** REST backend, a live **Vercel** web dashboard, and high-concurrency **Kubernetes** autoscaling manifests.
 
 ---
 
@@ -19,6 +23,7 @@ An end-to-end, production-ready computer vision solution for automated post-harv
 - [Comparative Experimental Benchmark](#-comparative-experimental-benchmark)
 - [Evaluation Figures & Insights](#-evaluation-figures--insights)
 - [Interactive Web App & Live Demo](#-interactive-web-app--live-demo)
+- [High-Concurrency Kubernetes Deployment](#-high-concurrency-kubernetes-deployment)
 - [API Documentation](#-api-documentation)
 - [Installation & Quickstart Guide](#-installation--quickstart-guide)
 - [Directory Structure](#-directory-structure)
@@ -152,10 +157,15 @@ Sample predictions demonstrate confident classifications across diverse fruit sp
 
 ## 💻 Interactive Web App & Live Demo
 
-The project features a full-stack **Streamlit** web application and a **FastAPI** microservice.
+The project features both a live **Vercel Web App** and a local **Streamlit + FastAPI** microservice.
 
-### Live UI Screenshot:
-Below is the live diagnosis interface showing an uploaded fresh fruit sample evaluated with **99.87% confidence**, complete with real-time inference latency and actionable handling recommendations:
+### 🌐 Live Production Deployment on Vercel:
+- **Production URL**: [https://cllgproj.vercel.app](https://cllgproj.vercel.app)
+- **API Endpoint**: `https://cllgproj.vercel.app/api/predict`
+- **Features**: Ultra-fast edge serving, interactive fruit diagnostic scanner, side-by-side benchmark explorer, Kubernetes scale inspector, and comprehensive research author credentials.
+
+### Local Streamlit UI Diagnosis:
+Below is the diagnosis interface showing an uploaded fresh fruit sample evaluated with **99.87% confidence**, complete with real-time inference latency and actionable handling recommendations:
 
 ![Streamlit Freshness Diagnosis UI](app_result_screenshot.png)
 
@@ -164,6 +174,34 @@ Below is the live diagnosis interface showing an uploaded fresh fruit sample eva
 - **Visual Confidence Meter**: Displays the probability distribution between fresh and rotten.
 - **Smart Recommendations**: Suggests retail readiness or immediate isolation to prevent cross-contamination.
 - **Dual Inference Mode**: Automatically queries the FastAPI REST backend with graceful fallback to direct local inference if the API server is offline.
+
+---
+
+## ☸️ High-Concurrency Kubernetes Deployment
+
+To ensure the production API **never crashes** under massive traffic spikes or when millions of retail sorting requests arrive simultaneously, the system includes enterprise-grade **Kubernetes manifests** with Horizontal Pod Autoscaling:
+
+### 1. Zero-Downtime Autoscaling Architecture
+- **Horizontal Pod Autoscaler (HPA v2)**: Automatically scales inference pods between **3 replicas (minimum)** and **15 replicas (maximum)** based on real-time resource utilization:
+  - **CPU Threshold**: Scales up when CPU utilization exceeds **70%**.
+  - **Memory Threshold**: Scales up when memory utilization exceeds **80%**.
+  - **Aggressive Scale-up Policy**: Instantly scales up by **100%** or **+4 pods every 15 seconds** to absorb sudden traffic surges without dropping incoming frames.
+  - **Graceful Scale-down Stabilization**: Implements a **300-second stabilization window** to prevent flapping during transient load drops.
+
+### 2. High-Availability Manifests Included:
+- [`k8s/deployment.yaml`](k8s/deployment.yaml): Rolling-update deployment (`maxSurge: 1`, `maxUnavailable: 0`), container CPU/Memory requests & limits, and automated `/health` liveness/readiness probes.
+- [`k8s/service.yaml`](k8s/service.yaml): Layer-4 `LoadBalancer` service and Layer-7 `Ingress` with Nginx reverse proxy buffering and 20MB payload tolerance.
+- [`k8s/hpa.yaml`](k8s/hpa.yaml): Metrics-driven autoscaler dynamically reacting to concurrent requests.
+- [`k8s/kustomization.yaml`](k8s/kustomization.yaml): Declarative Kustomize pipeline for one-command deployment.
+
+### 3. Deploy to Kubernetes:
+```bash
+# Apply all manifests via Kustomize:
+kubectl apply -k k8s/
+
+# Monitor horizontal pod autoscaling in real time:
+kubectl get hpa fruit-freshness-hpa --watch
+```
 
 ---
 
@@ -246,12 +284,24 @@ jupyter notebook code.ipynb
 
 ```
 research_proj/
-├── README.md                      # Comprehensive project documentation
+├── README.md                      # Comprehensive project documentation & live link
+├── index.html                     # Stunning Vercel production web application UI
+├── vercel.json                    # Vercel deployment & security headers config
+├── .vercelignore                  # Vercel deployment exclusions
+├── Dockerfile                     # Containerized production FastAPI runtime
+├── docker-compose.yml             # Multi-service local Docker orchestration
 ├── requirements.txt               # Pinned package dependencies
 ├── .gitignore                     # Git ignore rules for clean commits
 ├── code.ipynb                     # Executed dual-model comparative notebook
 ├── api.py                         # Production FastAPI microservice
 ├── app.py                         # Interactive Streamlit dashboard
+├── api/
+│   └── predict.js                 # Vercel serverless edge inference endpoint
+├── k8s/                           # Kubernetes autoscaling manifests
+│   ├── deployment.yaml            # 3-replica rolling update deployment & health probes
+│   ├── service.yaml               # LoadBalancer service & Ingress reverse proxy
+│   ├── hpa.yaml                   # Horizontal Pod Autoscaler (3 to 15 pods)
+│   └── kustomization.yaml         # Kustomize manifest bundle
 ├── model/
 │   └── freshness_model.h5         # Trained champion MobileNetV2 weights (13.11 MB)
 ├── app_result_screenshot.png      # Streamlit live diagnosis UI screenshot

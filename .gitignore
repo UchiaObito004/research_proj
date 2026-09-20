@@ -29,3 +29,4 @@ Thumbs.db
 # Root model checkpoints (use model/freshness_model.h5 for deployment)
 best_model*.h5
 *.log
+.vercel
