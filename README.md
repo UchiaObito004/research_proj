@@ -284,8 +284,7 @@ jupyter notebook code.ipynb
 
 ```
 research_proj/
-├── README.md                      # Comprehensive project documentation & live link
-├── index.html                     # Stunning Vercel production web application UI
+├── README.md                      # Comprehensive project documentation
 ├── vercel.json                    # Vercel deployment & security headers config
 ├── .vercelignore                  # Vercel deployment exclusions
 ├── Dockerfile                     # Containerized production FastAPI runtime
@@ -301,7 +300,6 @@ research_proj/
 │   ├── deployment.yaml            # 3-replica rolling update deployment & health probes
 │   ├── service.yaml               # LoadBalancer service & Ingress reverse proxy
 │   ├── hpa.yaml                   # Horizontal Pod Autoscaler (3 to 15 pods)
-├── research_paper.html         # Camera-ready IEEE 2-column research paper
 ├── fig_workflow.png            # System workflow diagram
 ├── fig_architecture.png        # CNN Architecture diagram
 ├── fig_curves.png              # Training & validation curves
@@ -315,10 +313,7 @@ research_proj/
 
 ---
 
-## 📜 Research Paper & Citation
-
-The complete research manuscript is available directly in this repository:
-- 📖 **Interactive IEEE Paper (HTML)**: [`research_paper.html`](research_paper.html)
+## 📜 Research Paper Citation
 
 If you use this work or codebase in your academic research, please cite:
 
