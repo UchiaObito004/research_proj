@@ -301,19 +301,15 @@ research_proj/
 │   ├── deployment.yaml            # 3-replica rolling update deployment & health probes
 │   ├── service.yaml               # LoadBalancer service & Ingress reverse proxy
 │   ├── hpa.yaml                   # Horizontal Pod Autoscaler (3 to 15 pods)
-│   └── kustomization.yaml         # Kustomize manifest bundle
-├── model/
-│   └── freshness_model.h5         # Trained champion MobileNetV2 weights (13.11 MB)
+├── fig_workflow.png               # System workflow diagram
+├── fig_architecture.png           # CNN Architecture diagram
+├── fig_curves.png                 # Training & validation curves
+├── fig_confusion_matrix.png       # Side-by-side confusion matrix
+├── fig_roc_curve.png              # Superimposed ROC-AUC curves
+├── fig_correlation.png            # Prediction correlation heatmap
 ├── app_result_screenshot.png      # Streamlit live diagnosis UI screenshot
-├── fig_dataset_samples.png        # Fig 1: Fresh vs. Rotten sample images
-├── fig_architecture.png           # Fig 2: CNN Architecture diagram
-├── fig_workflow.png               # Fig 3: System workflow diagram
-├── fig_curves.png                 # Fig 4: Training & validation curves
-├── fig_confusion_matrix.png       # Fig 5: Side-by-side confusion matrix
-├── fig_roc_curve.png              # Fig 6: Superimposed ROC-AUC curves
-├── fig_correlation.png            # Fig 7: Prediction correlation heatmap
-├── fig_predictions.png            # Fig 8: Test set sample predictions
-└── img.png                        # Master collage evaluation dashboard
+└── model/
+    └── freshness_model.h5         # Trained champion MobileNetV2 weights (13.11 MB)
 ```
 
 ---
