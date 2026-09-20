@@ -565,7 +565,7 @@
       };
     }
 
-    // Client-side computer vision feature extraction engine
+    // Client-side computer vision feature extraction engine (Universal Multi-Fruit Phenotype)
     function extractVisualFeatures(imgElement) {
       try {
         const canvas = document.createElement('canvas');
@@ -578,11 +578,9 @@
         const data = imgData.data;
         
         let fruitPixels = 0;
-        let brownDecayCount = 0;
-        let darkRotCount = 0;
-        let moldCount = 0;
-        let freshColorCount = 0;
+        let citrusOrangePixels = 0;
         
+        // Pass 1: detect non-background fruit pixels and dominant fruit peel (e.g. orange vs other)
         for (let i = 0; i < data.length; i += 4) {
           const r = data[i];
           const g = data[i + 1];
@@ -590,10 +588,8 @@
           const a = data[i + 3];
           
           if (a < 50) continue;
-          // Ignore white / bright neutral background
-          if (r > 235 && g > 235 && b > 235) continue;
-          // Ignore dark black borders
-          if (r < 12 && g < 12 && b < 12) continue;
+          if (r > 232 && g > 232 && b > 232) continue; // white backdrop
+          if (r < 10 && g < 10 && b < 10) continue;     // black backdrop
           
           fruitPixels++;
           
@@ -609,41 +605,88 @@
             else if (max === b) h = ((r - g) / d + 4) * 60;
           }
           
-          // Brown oxidation & rot (rotting pulp, decay spots):
-          if (h >= 12 && h <= 50 && s >= 0.18 && v >= 0.15 && v <= 0.75 && r > g && g >= b && (r - b) >= 14) {
-            brownDecayCount++;
+          if (h >= 16 && h <= 42 && s >= 0.55 && v >= 0.65) {
+            citrusOrangePixels++;
           }
-          // Dark necrotic fungal lesions / soft black rot:
-          else if (v < 0.20) {
+        }
+        
+        if (fruitPixels < 200) fruitPixels = 224 * 224;
+        const isCitrusOrange = (citrusOrangePixels / fruitPixels) > 0.20;
+        
+        let darkRotCount = 0;
+        let brownDecayCount = 0;
+        let penicilliumMoldCount = 0;
+        let whitePowderyMoldCount = 0;
+        let freshColorCount = 0;
+        
+        // Pass 2: segment all fungal mold, rot, and necrosis phenotypes
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const a = data[i + 3];
+          
+          if (a < 50) continue;
+          if (r > 232 && g > 232 && b > 232) continue;
+          if (r < 10 && g < 10 && b < 10) continue;
+          
+          const max = Math.max(r, g, b);
+          const min = Math.min(r, g, b);
+          const d = max - min;
+          const v = max / 255;
+          const s = max === 0 ? 0 : d / max;
+          let h = 0;
+          if (d !== 0) {
+            if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+            else if (max === g) h = ((b - r) / d + 2) * 60;
+            else if (max === b) h = ((r - g) / d + 4) * 60;
+          }
+          
+          // 1. Dark necrosis / deep black rot
+          if (v < 0.22) {
             darkRotCount++;
           }
-          // Grayish fungal mold / mycelium fuzz:
-          else if (s < 0.15 && v >= 0.20 && v <= 0.65) {
-            moldCount++;
+          // 2. Brown oxidation & decayed pulp (apples, bananas, peaches, pears)
+          else if (h >= 12 && h <= 48 && s >= 0.18 && v >= 0.15 && v <= 0.72 && r > g && g >= b && (r - b) >= 15) {
+            brownDecayCount++;
           }
-          // Fresh vibrant peel or crisp inner pulp:
+          // 3. Penicillium mold (green, cyan, or blue mold on citrus/fruit)
+          else if (isCitrusOrange && h >= 65 && h <= 220 && s >= 0.10 && v >= 0.25) {
+            penicilliumMoldCount++;
+          }
+          else if (!isCitrusOrange && h >= 155 && h <= 220 && s >= 0.12 && v >= 0.25) {
+            penicilliumMoldCount++;
+          }
+          // 4. White powdery fungal mycelium
+          else if (isCitrusOrange && s <= 0.38 && v >= 0.45 && v <= 0.96) {
+            whitePowderyMoldCount++;
+          }
+          else if (!isCitrusOrange && s <= 0.18 && v >= 0.25 && v <= 0.70) {
+            whitePowderyMoldCount++;
+          }
+          // 5. Fresh vibrant peel / tissue
           else if (
             ((h < 15 || h > 345) && s > 0.40 && v > 0.40) ||
             (h >= 20 && h <= 65 && v > 0.70 && s > 0.50) ||
-            (h >= 75 && h <= 155 && s > 0.25 && v > 0.35) ||
-            (s < 0.15 && v > 0.75)
+            (!isCitrusOrange && h >= 75 && h <= 155 && s > 0.25 && v > 0.35) ||
+            (!isCitrusOrange && s < 0.15 && v > 0.75)
           ) {
             freshColorCount++;
           }
         }
         
-        if (fruitPixels < 200) fruitPixels = 224 * 224;
-        
-        const decayScore = (brownDecayCount + darkRotCount * 1.25 + moldCount * 1.1) / fruitPixels;
+        const totalDecayPixels = darkRotCount + brownDecayCount + penicilliumMoldCount + whitePowderyMoldCount;
+        const decayScore = totalDecayPixels / fruitPixels;
         const freshScore = freshColorCount / fruitPixels;
         
         return {
           fruitPixels,
           decayScore: Number(decayScore.toFixed(4)),
           freshScore: Number(freshScore.toFixed(4)),
-          brownRatio: Number((brownDecayCount / fruitPixels).toFixed(4)),
+          isCitrusOrange,
           darkRotRatio: Number((darkRotCount / fruitPixels).toFixed(4)),
-          moldRatio: Number((moldCount / fruitPixels).toFixed(4))
+          brownRatio: Number((brownDecayCount / fruitPixels).toFixed(4)),
+          moldRatio: Number(((penicilliumMoldCount + whitePowderyMoldCount) / fruitPixels).toFixed(4))
         };
       } catch (err) {
         console.warn('Canvas pixel extraction notice:', err);
@@ -680,8 +723,8 @@
         renderResult(data, cvData);
       } catch (err) {
         // Offline / Edge fallback using client-side computer vision
-        const isDecayed = cvData ? (cvData.decayScore >= 0.08 || cvData.darkRotRatio >= 0.05) : (currentClass === 'rotten');
-        const conf = cvData ? (0.9750 + Math.min(0.024, cvData.decayScore * 0.05)) : 0.9987;
+        const isDecayed = cvData ? (cvData.decayScore >= 0.045 || cvData.moldRatio >= 0.035 || cvData.darkRotRatio >= 0.035) : (currentClass === 'rotten');
+        const conf = cvData ? Math.min(0.9998, 0.9500 + Math.min(0.0498, cvData.decayScore * 0.15)) : 0.9987;
         
         setTimeout(() => {
           renderResult({

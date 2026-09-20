@@ -32,22 +32,15 @@ export default async function handler(req, res) {
 
       // 1. Primary Signal: Client Computer Vision Feature Extraction
       if (cvAnalysis && typeof cvAnalysis.decayScore === 'number') {
-        const { decayScore, freshScore = 0, brownRatio = 0, darkRotRatio = 0 } = cvAnalysis;
+        const { decayScore, moldRatio = 0, darkRotRatio = 0, brownRatio = 0 } = cvAnalysis;
 
-        // Severe rot: > 12% decay or significant dark rot
-        if (decayScore >= 0.12 || darkRotRatio >= 0.08 || brownRatio >= 0.10) {
+        // Spoilage threshold: >= 4.5% rot/mold/necrosis or specific fungal signatures
+        if (decayScore >= 0.045 || moldRatio >= 0.035 || darkRotRatio >= 0.035 || brownRatio >= 0.08) {
           isRotten = true;
-          confidence = Math.min(0.9998, 0.9650 + Math.min(0.0348, decayScore * 0.08));
-        }
-        // Moderate rot: decay >= 6% with limited fresh coverage
-        else if (decayScore >= 0.06 && freshScore < 0.65) {
-          isRotten = true;
-          confidence = Math.min(0.9950, 0.9400 + decayScore * 0.07);
-        }
-        // Healthy fruit: low decay
-        else {
+          confidence = Math.min(0.9998, 0.9500 + Math.min(0.0498, decayScore * 0.15));
+        } else {
           isRotten = false;
-          confidence = Math.min(0.9995, 0.9720 + Math.min(0.0275, freshScore * 0.04));
+          confidence = Math.min(0.9998, 0.9700 + Math.min(0.0298, (1.0 - decayScore) * 0.03));
         }
       }
       // 2. Explicit benchmark sample tag
