@@ -1,7 +1,31 @@
+# Python & Environments
 venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Datasets
 binary_dataset/
 dataset/
-__pycache__/
-*.pyc
+*.zip
+*.tar.gz
+
+# OS specific files
 .DS_Store
-best_model.h5
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Root model checkpoints (use model/freshness_model.h5 for deployment)
+best_model*.h5
+*.log
