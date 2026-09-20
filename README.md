@@ -301,20 +301,27 @@ research_proj/
 │   ├── deployment.yaml            # 3-replica rolling update deployment & health probes
 │   ├── service.yaml               # LoadBalancer service & Ingress reverse proxy
 │   ├── hpa.yaml                   # Horizontal Pod Autoscaler (3 to 15 pods)
-├── fig_workflow.png               # System workflow diagram
-├── fig_architecture.png           # CNN Architecture diagram
-├── fig_curves.png                 # Training & validation curves
-├── fig_confusion_matrix.png       # Side-by-side confusion matrix
-├── fig_roc_curve.png              # Superimposed ROC-AUC curves
-├── fig_correlation.png            # Prediction correlation heatmap
-├── app_result_screenshot.png      # Streamlit live diagnosis UI screenshot
+├── research_paper.html         # Camera-ready IEEE 2-column research paper
+├── research_paper.pdf          # Pre-compiled 6-page IEEE publication PDF
+├── fig_workflow.png            # System workflow diagram
+├── fig_architecture.png        # CNN Architecture diagram
+├── fig_curves.png              # Training & validation curves
+├── fig_confusion_matrix.png    # Side-by-side confusion matrix
+├── fig_roc_curve.png           # Superimposed ROC-AUC curves
+├── fig_correlation.png         # Prediction correlation heatmap
+├── app_result_screenshot.png   # Streamlit live diagnosis UI screenshot
 └── model/
-    └── freshness_model.h5         # Trained champion MobileNetV2 weights (13.11 MB)
+    └── freshness_model.h5      # Trained champion MobileNetV2 weights (13.11 MB)
 ```
 
 ---
 
-## 📜 Research Paper Citation
+## 📜 Research Paper & Citation
+
+The complete research manuscript is available directly in this repository:
+- 📖 **Interactive IEEE Paper (HTML)**: [`research_paper.html`](research_paper.html)
+- 📥 **Camera-Ready Publication (PDF)**: [`research_paper.pdf`](research_paper.pdf) (6 Pages, IEEE 2-Column Standard)
+
 If you use this work or codebase in your academic research, please cite:
 
 ```bibtex
